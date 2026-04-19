@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Orders - Admin</title>
+  <link rel="stylesheet" href="css/style.css">
+
+  <style>
+    body {
+      font-family: Arial;
+      background: #f5f5f5;
+    }
+
+    .container {
+      padding: 20px;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+    }
+
+    th, td {
+      padding: 12px;
+      border: 1px solid #ddd;
+      text-align: center;
+    }
+
+    th {
+      background: #333;
+      color: #fff;
+    }
+
+    button {
+      padding: 5px 10px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .prepare {
+      background: orange;
+      color: white;
+    }
+
+    .ready {
+      background: green;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Orders Management</h1>
+
+  <table>
+    <tr>
+      <th>Order ID</th>
+      <th>Customer</th>
+      <th>Item</th>
+      <th>Status</th>
+      <th>Action</th>
+    </tr>
+
+    <tr>
+      <td>001</td>
+      <td>Juan</td>
+      <td>Latte</td>
+      <td id="status1">Pending</td>
+      <td>
+        <button class="prepare" onclick="setStatus(1,'Preparing')">Preparing</button>
+        <button class="ready" onclick="setStatus(1,'Ready')">Ready</button>
+      </td>
+    </tr>
+
+    <tr>
+      <td>002</td>
+      <td>Maria</td>
+      <td>Cappuccino</td>
+      <td id="status2">Pending</td>
+      <td>
+        <button class="prepare" onclick="setStatus(2,'Preparing')">Preparing</button>
+        <button class="ready" onclick="setStatus(2,'Ready')">Ready</button>
+      </td>
+    </tr>
+
+  </table>
+</div>
+
+<script>
+function setStatus(id, status) {
+  document.getElementById("status" + id).innerText = status;
+}
+</script>
+
+</body>
+</html>

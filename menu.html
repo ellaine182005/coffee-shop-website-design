@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Menu - Admin</title>
+  <link rel="stylesheet" href="css/style.css">
+
+  <style>
+    body { font-family: Arial; background:#f5f5f5; }
+    .container { padding:20px; }
+
+    table {
+      width:100%;
+      background:white;
+      border-collapse: collapse;
+      margin-top:20px;
+    }
+
+    th, td {
+      padding:10px;
+      border:1px solid #ddd;
+      text-align:center;
+    }
+
+    th { background:#333; color:white; }
+
+    input { padding:5px; margin:5px; }
+    button { padding:6px 10px; cursor:pointer; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Menu Management</h1>
+
+  <!-- ADD ITEM FORM -->
+  <input type="text" id="name" placeholder="Coffee Name">
+  <input type="number" id="price" placeholder="Price">
+  <button onclick="addItem()">Add Item</button>
+
+  <!-- TABLE -->
+  <table>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Price</th>
+      <th>Action</th>
+    </tr>
+
+    <tbody id="menuTable">
+    </tbody>
+  </table>
+</div>
+
+<script>
+let menu = [
+  {id:1, name:"Latte", price:100},
+  {id:2, name:"Cappuccino", price:120}
+];
+
+function displayMenu() {
+  let table = document.getElementById("menuTable");
+  table.innerHTML = "";
+
+  menu.forEach(item => {
+    table.innerHTML += `
+      <tr>
+        <td>${item.id}</td>
+        <td>${item.name}</td>
+        <td>${item.price}</td>
+        <td>
+          <button onclick="deleteItem(${item.id})">Delete</button>
+        </td>
+      </tr>
+    `;
+  });
+}
+
+function addItem() {
+  let name = document.getElementById("name").value;
+  let price = document.getElementById("price").value;
+
+  menu.push({
+    id: menu.length + 1,
+    name: name,
+    price: price
+  });
+
+  displayMenu();
+}
+
+function deleteItem(id) {
+  menu = menu.filter(item => item.id !== id);
+  displayMenu();
+}
+
+displayMenu();
+</script>
+
+</body>
+</html>
