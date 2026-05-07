@@ -219,9 +219,9 @@ app.post("/register", (req, res) => {
   });
 });
 
-// ====================
+// ===================
 // LOGIN USER
-// ====================
+// ===================
 app.post("/login", (req, res) => {
   const { email, password } = req.body;
 
