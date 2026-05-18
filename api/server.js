@@ -142,9 +142,9 @@ const upload = multer({ storage });
 // =====================
 app.use("/uploads", express.static("uploads"));
 
-// =====================
+// ====================
 // DATABASE
-// =====================
+// ====================
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",
