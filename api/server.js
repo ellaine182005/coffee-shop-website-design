@@ -189,7 +189,7 @@ app.get("/menu/offers", (req, res) => {
 
 // ===================
 // REGISTER USER
-// =====================
+// ===================
 app.post("/register", (req, res) => {
   const { name, email, password, address, gender, age, phone } = req.body;
 
