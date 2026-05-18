@@ -157,7 +157,7 @@ db.connect(err => {
   else console.log("Connected to MySQL");
 });
 
-// =====================
+
 // MENU APIs (unchanged)
 // =====================
 app.get("/menu", (req, res) => {
