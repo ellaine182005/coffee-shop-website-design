@@ -187,7 +187,7 @@ app.get("/menu/offers", (req, res) => {
   );
 });
 
-// =====================
+// ====================
 // REGISTER USER
 // =====================
 app.post("/register", (req, res) => {
