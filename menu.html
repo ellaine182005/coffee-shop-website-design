@@ -1,100 +1,235 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Menu - Admin</title>
-  <link rel="stylesheet" href="css/style.css">
+<meta charset="UTF-8">
+<title>Menu Admin</title>
 
-  <style>
-    body { font-family: Arial; background:#f5f5f5; }
-    .container { padding:20px; }
+<style>
+body {
+  font-family: Arial;
+  background:#f5f5f5;
+}
 
-    table {
-      width:100%;
-      background:white;
-      border-collapse: collapse;
-      margin-top:20px;
-    }
+.container {
+  padding:20px;
+}
 
-    th, td {
-      padding:10px;
-      border:1px solid #ddd;
-      text-align:center;
-    }
+h1 {
+  margin-bottom: 15px;
+}
 
-    th { background:#333; color:white; }
+/* BACK BUTTON */
+.back-btn {
+  padding: 10px 15px;
+  background: #333;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-bottom: 15px;
+}
 
-    input { padding:5px; margin:5px; }
-    button { padding:6px 10px; cursor:pointer; }
-  </style>
+.back-btn:hover {
+  background: #111;
+}
+
+table {
+  width:100%;
+  background:white;
+  border-collapse: collapse;
+  margin-top:20px;
+}
+
+th, td {
+  padding:10px;
+  border:1px solid #ddd;
+  text-align:center;
+}
+
+th {
+  background:#333;
+  color:white;
+}
+
+input, select, button {
+  padding:8px;
+  margin:5px;
+}
+
+button {
+  cursor:pointer;
+}
+</style>
 </head>
+
 <body>
 
 <div class="container">
-  <h1>Menu Management</h1>
 
-  <!-- ADD ITEM FORM -->
-  <input type="text" id="name" placeholder="Coffee Name">
-  <input type="number" id="price" placeholder="Price">
-  <button onclick="addItem()">Add Item</button>
+<!-- BACK BUTTON -->
+<button class="back-btn" onclick="goBack()">
+  ⬅ Back to Dashboard
+</button>
 
-  <!-- TABLE -->
-  <table>
-    <tr>
-      <th>ID</th>
-      <th>Name</th>
-      <th>Price</th>
-      <th>Action</th>
-    </tr>
+<h1>Menu Management</h1>
 
-    <tbody id="menuTable">
-    </tbody>
-  </table>
+<!-- FORM -->
+<input type="text" id="name" placeholder="Name">
+
+<input type="number" id="price" placeholder="Price">
+
+<input type="text" id="description" placeholder="Description">
+
+<!-- TYPE SELECT -->
+<select id="type">
+  <option value="POPULAR">POPULAR</option>
+  <option value="OFFER">OFFER</option>
+</select>
+
+<input type="file" id="image">
+
+<button onclick="addItem()">Add Item</button>
+
+<!-- TABLE -->
+<table>
+
+<tr>
+  <th>ID</th>
+  <th>Image</th>
+  <th>Name</th>
+  <th>Price</th>
+  <th>Description</th>
+  <th>Type</th>
+  <th>Action</th>
+</tr>
+
+<tbody id="menuTable"></tbody>
+
+</table>
+
 </div>
 
 <script>
-let menu = [
-  {id:1, name:"Latte", price:100},
-  {id:2, name:"Cappuccino", price:120}
-];
 
-function displayMenu() {
+const BASE_URL = "http://192.168.0.107:3000";
+
+// =====================
+// BACK BUTTON
+// =====================
+function goBack() {
+  window.location.href = "dashboard.html";
+}
+
+// =====================
+// LOAD MENU
+// =====================
+async function loadMenu() {
+
+  let res = await fetch(`${BASE_URL}/menu`);
+  let data = await res.json();
+
   let table = document.getElementById("menuTable");
+
   table.innerHTML = "";
 
-  menu.forEach(item => {
+  data.forEach(item => {
+
     table.innerHTML += `
-      <tr>
-        <td>${item.id}</td>
-        <td>${item.name}</td>
-        <td>${item.price}</td>
-        <td>
-          <button onclick="deleteItem(${item.id})">Delete</button>
-        </td>
-      </tr>
+    <tr>
+
+      <td>${item.id}</td>
+
+      <td>
+        <img
+          src="${BASE_URL}/uploads/${item.image}"
+          width="60"
+        >
+      </td>
+
+      <td>${item.name}</td>
+
+      <td>₱${item.price}</td>
+
+      <td>${item.description}</td>
+
+      <td>${item.type}</td>
+
+      <td>
+        <button onclick="deleteItem(${item.id})">
+          Delete
+        </button>
+      </td>
+
+    </tr>
     `;
   });
 }
 
-function addItem() {
+// =====================
+// ADD ITEM
+// =====================
+async function addItem() {
+
   let name = document.getElementById("name").value;
   let price = document.getElementById("price").value;
+  let description = document.getElementById("description").value;
+  let type = document.getElementById("type").value;
+  let imageFile = document.getElementById("image").files[0];
 
-  menu.push({
-    id: menu.length + 1,
-    name: name,
-    price: price
+  if (!name || !price || !imageFile) {
+    alert("Fill all fields + image");
+    return;
+  }
+
+  let formData = new FormData();
+
+  formData.append("name", name);
+  formData.append("price", price);
+  formData.append("description", description);
+  formData.append("type", type);
+  formData.append("image", imageFile);
+
+  try {
+
+    let res = await fetch(`${BASE_URL}/menu`, {
+      method: "POST",
+      body: formData
+    });
+
+    let data = await res.json();
+
+    alert("Added successfully!");
+
+    document.getElementById("name").value = "";
+    document.getElementById("price").value = "";
+    document.getElementById("description").value = "";
+    document.getElementById("image").value = "";
+
+    loadMenu();
+
+  } catch (err) {
+    console.log(err);
+    alert("Error adding item");
+  }
+}
+
+// =====================
+// DELETE ITEM
+// =====================
+async function deleteItem(id) {
+
+  await fetch(`${BASE_URL}/menu/${id}`, {
+    method: "DELETE"
   });
 
-  displayMenu();
+  loadMenu();
 }
 
-function deleteItem(id) {
-  menu = menu.filter(item => item.id !== id);
-  displayMenu();
-}
+// =====================
+// AUTO LOAD
+// =====================
+loadMenu();
 
-displayMenu();
 </script>
 
 </body>
