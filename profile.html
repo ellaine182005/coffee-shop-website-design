@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<title>Admin Profile</title>
+
+<style>
+
+body {
+    font-family: Arial;
+    background: #f5f5f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.card {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    width: 300px;
+    text-align: center;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+}
+
+.circle {
+    width: 80px;
+    height: 80px;
+    background: #c98d83;
+    border-radius: 50%;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+    color: white;
+}
+
+h2 {
+    margin-top: 15px;
+}
+
+.email {
+    color: gray;
+    margin-top: 5px;
+}
+
+button {
+    margin-top: 20px;
+    padding: 10px;
+    border: none;
+    background: #333;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+    <div class="circle">👤</div>
+
+    <h2 id="name">Loading...</h2>
+    <div class="email" id="email">Loading...</div>
+
+    <button onclick="back()">Back</button>
+
+</div>
+
+<script>
+
+const admin = JSON.parse(localStorage.getItem("admin"));
+
+if (admin) {
+    document.getElementById("name").innerText = admin.name;
+    document.getElementById("email").innerText = admin.email;
+}
+
+function back() {
+    window.location.href = "dashboard.html";
+}
+
+</script>
+
+</body>
+</html>

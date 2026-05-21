@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Coffee Admin</title>
+
+<link rel="stylesheet"
+    href="https://unpkg.com/swiper@7/swiper-bundle.min.css" />
+
+<link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+<link rel="stylesheet" href="css/style.css">
+
+<style>
+
+/* HEADER */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* LOGO + PROFILE GROUP */
+.logo-area {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* PROFILE CIRCLE */
+.profile-circle {
+    width: 38px;
+    height: 38px;
+    background: #c98d83;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-size: 18px;
+    transition: 0.2s;
+}
+
+.profile-circle:hover {
+    transform: scale(1.1);
+}
+
+/* NAV */
+.navbar a {
+    margin-left: 10px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header class="header">
+
+    <div id="menu-btn" class="fas fa-bars"></div>
+
+    <!-- LOGO + PROFILE -->
+    <div class="logo-area">
+
+        <!-- PROFILE BUTTON -->
+        <div class="profile-circle" onclick="goProfile()">
+            👤
+        </div>
+        
+        <a href="#" class="logo">
+            coffee <i class="fas fa-mug-hot"></i>
+        </a>
+
+        
+
+    </div>
+
+    <nav class="navbar">
+        <a href="#home">Dashboard</a>
+        <a href="orders.html">Orders</a>
+        <a href="menu.html">Menu</a>
+        <a href="#" onclick="logout()">Logout</a>
+    </nav>
+
+</header>
+
+<!-- HOME -->
+<section class="home" id="home">
+
+    <div class="row">
+
+        <div class="content">
+
+            <h3>fresh coffee in the morning</h3>
+
+            <a href="#" class="btn">buy one now</a>
+
+        </div>
+
+        <div class="image">
+            <img src="image/home-img-1.png" class="main-home-image">
+        </div>
+
+    </div>
+
+</section>
+
+<script>
+
+/* NAV TO PROFILE */
+function goProfile() {
+    window.location.href = "profile.html";
+}
+
+/* LOGOUT WITH CONFIRM */
+function logout() {
+
+    let confirmLogout = confirm("Are you sure you want to logout?");
+
+    if (confirmLogout) {
+
+        alert("Logout successful");
+
+        localStorage.removeItem("admin");
+
+        window.location.href = "index.html";
+    }
+}
+
+</script>
+
+</body>
+</html>

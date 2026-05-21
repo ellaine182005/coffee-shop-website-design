@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <title>Orders - Admin</title>
-  <link rel="stylesheet" href="css/style.css">
 
   <style>
     body {
@@ -37,9 +36,11 @@
     }
 
     button {
-      padding: 5px 10px;
+      padding: 6px 10px;
       border: none;
       cursor: pointer;
+      border-radius: 4px;
+      margin: 2px;
     }
 
     .prepare {
@@ -51,51 +52,140 @@
       background: green;
       color: white;
     }
+
+    .delivered {
+      background: #444;
+      color: white;
+    }
+
+    /* BACK BUTTON */
+    .back-btn {
+      padding: 10px 15px;
+      margin-bottom: 15px;
+      background: #333;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .back-btn:hover {
+      background: #111;
+    }
+
   </style>
 </head>
+
 <body>
 
 <div class="container">
+
+  <!-- BACK BUTTON -->
+  <button class="back-btn" onclick="goBack()">
+    ⬅ Back to Dashboard
+  </button>
+
   <h1>Orders Management</h1>
 
   <table>
-    <tr>
-      <th>Order ID</th>
-      <th>Customer</th>
-      <th>Item</th>
-      <th>Status</th>
-      <th>Action</th>
-    </tr>
+    <thead>
+      <tr>
+        <th>Order ID</th>
+        <th>Customer</th>
+        <th>Item</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
 
-    <tr>
-      <td>001</td>
-      <td>Juan</td>
-      <td>Latte</td>
-      <td id="status1">Pending</td>
-      <td>
-        <button class="prepare" onclick="setStatus(1,'Preparing')">Preparing</button>
-        <button class="ready" onclick="setStatus(1,'Ready')">Ready</button>
-      </td>
-    </tr>
-
-    <tr>
-      <td>002</td>
-      <td>Maria</td>
-      <td>Cappuccino</td>
-      <td id="status2">Pending</td>
-      <td>
-        <button class="prepare" onclick="setStatus(2,'Preparing')">Preparing</button>
-        <button class="ready" onclick="setStatus(2,'Ready')">Ready</button>
-      </td>
-    </tr>
-
+    <tbody id="ordersTable">
+      <!-- DYNAMIC DATA HERE -->
+    </tbody>
   </table>
+
 </div>
 
 <script>
-function setStatus(id, status) {
-  document.getElementById("status" + id).innerText = status;
+
+const BASE_URL = "http://192.168.0.107:3000"; 
+// change if imong IP lahi
+
+// ======================
+// BACK BUTTON FUNCTION
+// ======================
+function goBack() {
+  window.location.href = "dashboard.html";
 }
+
+// ======================
+// LOAD ORDERS FROM DB
+// ======================
+function loadOrders() {
+
+  fetch(`${BASE_URL}/orders`)
+    .then(res => res.json())
+    .then(data => {
+
+      let html = "";
+
+      data.forEach(order => {
+
+        html += `
+          <tr>
+            <td>${order.id}</td>
+            <td>${order.user_name}</td>
+            <td>${order.items}</td>
+            <td id="status${order.id}">${order.status}</td>
+            <td>
+              <button class="prepare" onclick="updateStatus(${order.id}, 'Preparing')">Preparing</button>
+              <button class="ready" onclick="updateStatus(${order.id}, 'Ready')">Ready</button>
+              <button class="delivered" onclick="updateStatus(${order.id}, 'Delivered')">Delivered</button>
+            </td>
+          </tr>
+        `;
+      });
+
+      document.getElementById("ordersTable").innerHTML = html;
+    })
+    .catch(err => {
+      console.log("Error loading orders:", err);
+    });
+}
+
+// ======================
+// UPDATE STATUS
+// ======================
+function updateStatus(id, status) {
+
+  fetch(`${BASE_URL}/update-order-status`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      order_id: id,
+      status: status
+    })
+  })
+  .then(res => res.json())
+  .then(() => {
+
+    const el = document.getElementById("status" + id);
+    el.innerText = status;
+
+    if (status === "Preparing") el.style.color = "orange";
+    if (status === "Ready") el.style.color = "green";
+    if (status === "Delivered") el.style.color = "black";
+
+  })
+  .catch(err => console.log("Update error:", err));
+}
+
+// ======================
+// AUTO LOAD
+// ======================
+loadOrders();
+
 </script>
 
 </body>
